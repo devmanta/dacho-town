@@ -1,6 +1,8 @@
 const express = require('express');
 const fs = require('fs');
 
+const data = require('./module/guess');
+
 const app = express();
 app.use(express.json());
 app.use(express.static("public"));
@@ -34,6 +36,11 @@ app.get('/test', function(req, res){
         }
         res.end();
     });
+});
+
+app.get('/data', (req, res)=>{
+    const json = data;
+    res.send(json);
 });
 
 app.listen(3000, ()=>{
