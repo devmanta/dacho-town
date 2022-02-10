@@ -1,7 +1,7 @@
 const express = require('express');
 const fs = require('fs');
 
-const data = require('./module/guess');
+const data = require('./module/guess-photo');
 
 const app = express();
 app.use(express.json());
