@@ -1,11 +1,12 @@
 const express = require('express');
 const fs = require('fs');
 
-const data = require('./module/guess-photo');
-
 const app = express();
 app.use(express.json());
-app.use(express.static("public"));
+app.use(express.static('public'));
+
+const guessPhotoRouter = require('./router/games/guessPhotoRouter.js'); //객체 app을 전달
+app.use('/games/guess-photo', guessPhotoRouter);
 
 app.get('/', function(req, res){
     res.writeHead(200, {
@@ -36,11 +37,6 @@ app.get('/test', function(req, res){
         }
         res.end();
     });
-});
-
-app.get('/data', (req, res)=>{
-    const json = data;
-    res.send(json);
 });
 
 app.listen(3000, ()=>{

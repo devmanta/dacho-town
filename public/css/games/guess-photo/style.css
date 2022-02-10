@@ -1,3 +1,15 @@
 h3{
     background-color: green;
 }
+.black-cover{
+    position: absolute;
+    background-color: black;
+    width: 1000px; 
+    height: 500px;
+    top: 10px;
+    left: 10px;
+}
+img{
+    position: absolute;
+    filter: brightness(0);
+}
