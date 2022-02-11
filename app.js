@@ -1,14 +1,19 @@
 const express = require('express');
+const path = require('path');
 const fs = require('fs');
 
 const app = express();
 app.use(express.json());
 app.use(express.static('public'));
+app.use(express.static(__dirname + '/public'));
+
+console.log(__dirname);
 
 const guessPhotoRouter = require('./router/games/guessPhotoRouter.js'); //객체 app을 전달
 app.use('/games/guess-photo', guessPhotoRouter);
 
 app.get('/', function(req, res){
+    console.log(__dirname);
     res.writeHead(200, {
         'Content-Type': 'text/html'
     });
