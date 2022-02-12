@@ -6,9 +6,11 @@ const router = express.Router();
 const appRootPath = path.resolve('./');
 const staticRootPath = appRootPath + '/public';
 
+const guessPhotoList = require('../../module/games/guess-photo/guess-photo-list');
+
+//URL access
 router.get('/', function(req, res){
     res.statusCode = 200;
-    // res.send('got it!');
     res.setHeader('Content-Type', 'text/html');
     fs.readFile(staticRootPath + '/html/games/guess-photo/index.html', function(err, data){
         if(err){
@@ -19,6 +21,13 @@ router.get('/', function(req, res){
         }
         res.end();
     });
+});
+
+
+//JSON access
+router.get('/data', function(req, res){
+    res.statusCode = 200;
+    res.send(guessPhotoList);
 });
 
 module.exports = router;
