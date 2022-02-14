@@ -17,4 +17,30 @@ function getRandomIntInclusive(min, max) {
 function isEmptyObject(value) {
     return Object.keys(value).length === 0 && value.constructor === Object;
 }
-// http://postbarthian.com/javascript/timer.html
+
+//Timer
+let [milliseconds,seconds, totalDuration] = [0,0,0];
+let int = null;
+
+function displayTimer(el){
+    milliseconds+=1;
+    if(milliseconds == 10){
+        milliseconds = 0;
+        seconds++;
+    }
+
+    el.innerText = `${seconds}.${milliseconds}`;
+}
+
+function startTimer(el){
+    [milliseconds,seconds] = [0,0];
+    int = setInterval(displayTimer(el), 100);
+}
+
+function clearTimer(){
+    clearInterval(int);
+}
+
+function addTotalDuration(el){
+    totalDuration += Number(el.innerText);
+}
