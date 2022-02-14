@@ -14,4 +14,7 @@ function getRandomIntInclusive(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min; //최댓값도 포함, 최솟값도 포함
   }
 
+function isEmptyObject(value) {
+    return Object.keys(value).length === 0 && value.constructor === Object;
+}
 // http://postbarthian.com/javascript/timer.html

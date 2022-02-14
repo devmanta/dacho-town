@@ -12,41 +12,28 @@ window.addEventListener('DOMContentLoaded', ()=>{
 });
 
 async function renderQuestionArea(gameArea) {
-    const response = await fetch(domain + guessPhotoContextPath + '/question');
-
-    if(response.status == 200){
-        const data = await response.json();
-        const {photoList} = data;
-        const {photoAnswers} = data;
-        insertAnswers(photoAnswers);
-        await renderGamePhotoArea(photoList, gameArea);
-    }else{
-        alert('OOPS! Something Wrong with API CALL!!');
+    if(isEmptyObject(questions)){
+        const response = await fetch(domain + guessPhotoContextPath + '/question');
+    
+        if(response.status == 200){
+            const data = await response.json();
+            const {photoList} = data;
+            const {photoAnswers} = data;
+            insertQuestions(photoList);
+            insertAnswers(photoAnswers);
+        }else{
+            alert('OOPS! Something Wrong with API CALL!!');
+        }
     }
+    await renderGamePhotoArea(gameArea);
 }
 
-async function renderAnswerArea(gameArea) {
-    console.log('일로오나 renderAnswerArea');
-    const response = await fetch(domain + guessPhotoContextPath + '/answer-choice-list');
-
-    if(response.status == 200){
-        const data = await response.json();
-        insertAnswerChoice(data);
-        renderAnswerChoiceArea(data, gameArea);
-    }else{
-        alert('OOPS! Something Wrong with API CALL!!');
-        throw new Error('Something Wrong with API CALL!!')
-    }
-}
-
-async function renderGamePhotoArea(data, gameArea){
-    questions = shuffleArray(data);
-
+async function renderGamePhotoArea(gameArea){
     let blackCover = document.createElement('div');
     blackCover.className = 'black-cover';
 
     let targetImg = document.createElement('img');
-    targetImg.src = imgDir + questions[0];
+    targetImg.src = imgDir + questions.pop();
     targetImg.id = 'questionPhoto';
     
     if(!targetImg.width){
@@ -61,46 +48,46 @@ async function renderGamePhotoArea(data, gameArea){
     }
 }
 
-function renderAnswerChoiceArea(data, gameArea){
+async function renderAnswerArea(gameArea) {
+    if(isEmptyObject(answerChoice)){
+        const response = await fetch(domain + guessPhotoContextPath + '/answer-choice-list');
+        if(response.status == 200){
+            const data = await response.json();
+            insertAnswerChoice(data);
+        }else{
+            alert('OOPS! Something Wrong with API CALL!!');
+            throw new Error('Something Wrong with API CALL!!')
+        }
+    }
+    renderAnswerChoiceArea(gameArea);
+}
+
+function renderAnswerChoiceArea(gameArea){
+    const img = document.getElementById('questionPhoto');
     const answerArea = document.createElement('div');
     answerArea.className = 'answer-area';
-    answerArea.style.left = `${document.getElementById('questionPhoto').width / 2}px`;
-    for(key in data) {
+    answerArea.style.left = `${img.width / 2}px`;
+    for(key in answerChoice) {
         let answerBox = document.createElement('div');
         answerBox.className = 'answer-box';
 
-        const value = data[key];
+        const value = answerChoice[key];
         const randomIdx = getRandomIntInclusive(0, value.length-1);
         answerBox.innerText = value[randomIdx];
+        answerBox.id = key;
+
+        answerBox.addEventListener('click', function(){
+            const result = checkAnswer(img, this.id);
+            if(result){
+                alert('정답!');
+            }else{
+                alert('땡!');
+            }
+        });
         answerArea.appendChild(answerBox);
     }
 
     gameArea.appendChild(answerArea);
-}
-
-function insertAnswers(data){
-    answers = data;
-}
-
-function insertAnswerChoice(data){
-    answerChoice = data;
-}
-
-function moveLineToTarget(img, e){
-    const x = e.pageX - img.offsetLeft + img.scrollLeft;
-    const y = e.pageY - img.offsetTop + img.scrollTop;
-
-    console.log(`여기 ${x}       ${y}`);
-    img.style.filter= 'none';
-    img.style.clip = `rect(${y-30}px, ${x-10}px, ${y-10}px, ${x-30}px)`;
-}
-
-function moveLineToTargetMobile(img, e){
-    const x = e.touches[0].pageX - img.offsetLeft + img.scrollLeft;
-    const y = e.touches[0].pageY - img.offsetTop + img.scrollTop;
-    console.log(`${x}       ${y}`);
-    img.style.filter= 'none';
-    img.style.clip = `rect(${y-30}px, ${x-10}px, ${y-10}px, ${x-30}px)`;
 }
 
 function renderBtnArea(gameArea){
@@ -114,6 +101,34 @@ function renderBtnArea(gameArea){
     gameArea.appendChild(btnArea);
 }
 
+function insertQuestions(data){
+    questions = shuffleArray(data);
+}
+
+function insertAnswers(data){
+    answers = data;
+}
+
+function insertAnswerChoice(data){
+    answerChoice = data;
+}
+
+function moveLineToTarget(img, e){
+    const x = e.pageX - img.offsetLeft;
+    const y = e.pageY - img.offsetTop;
+
+    img.style.filter= 'none';
+    img.style.clip = `rect(${y-30}px, ${x-10}px, ${y-10}px, ${x-30}px)`;
+}
+
+function moveLineToTargetMobile(img, e){
+    const x = e.touches[0].pageX - img.offsetLeft;
+    const y = e.touches[0].pageY - img.offsetTop;
+
+    img.style.filter= 'none';
+    img.style.clip = `rect(${y-30}px, ${x-10}px, ${y-10}px, ${x-30}px)`;
+}
+
 async function renderAll() {
     try{
         await renderQuestionArea(gameArea);
@@ -125,9 +140,17 @@ async function renderAll() {
     }
 }
 
-startBtn.addEventListener('click', () => {
-    renderAll();
-});
+startBtn.addEventListener('click', () => renderAll());
+
+function checkAnswer(img, key){
+    let photoName = img.src.split('/').pop();
+    photoName = photoName.substring(0, photoName.lastIndexOf('.'));
+    console.log('photoName>>>> ' + photoName);
+    if(key == answers[photoName]){
+        return true;
+    }
+    return false;
+}
 
 //mousemove is not working on mobile. Should use touchmove
 //CSS clip reference:
