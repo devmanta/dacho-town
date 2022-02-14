@@ -1,14 +1,32 @@
 h3{
     background-color: green;
 }
+
 .black-cover{
     background-color: black;
-    width: 1000px; 
-    height: 500px;
     top: 10px;
     left: 10px;
 }
+
 img{
     position: absolute;
     filter: brightness(0);
+}
+
+.answer-area{
+    position: relative;
+    display: inline-block;
+    transform: translate(-50%, 0);
+}
+
+.answer-box{
+    float: left;
+    border: 5px solid tomato;
+    border-radius: 13px;
+    padding: 10px;
+    margin: 10px;
+}
+
+.answer-box:hover{
+    box-shadow: 0px 2px 10px 2px grey;
 }

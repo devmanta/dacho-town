@@ -47,6 +47,7 @@ async function renderGamePhotoArea(data, gameArea){
 
     let targetImg = document.createElement('img');
     targetImg.src = imgDir + questions[0];
+    targetImg.id = 'questionPhoto';
     
     if(!targetImg.width){
         alert('OOPS! Something Wrong with getting Image');
@@ -63,9 +64,15 @@ async function renderGamePhotoArea(data, gameArea){
 function renderAnswerChoiceArea(data, gameArea){
     const answerArea = document.createElement('div');
     answerArea.className = 'answer-area';
-
+    answerArea.style.left = `${document.getElementById('questionPhoto').width / 2}px`;
     for(key in data) {
-        // console.log('key:' + key + ' / ' + 'value:' + data[key]);
+        let answerBox = document.createElement('div');
+        answerBox.className = 'answer-box';
+
+        const value = data[key];
+        const randomIdx = getRandomIntInclusive(0, value.length-1);
+        answerBox.innerText = value[randomIdx];
+        answerArea.appendChild(answerBox);
     }
 
     gameArea.appendChild(answerArea);
@@ -110,14 +117,17 @@ function renderBtnArea(gameArea){
 async function renderAll() {
     try{
         await renderQuestionArea(gameArea);
-        renderAnswerArea(gameArea);
+        await renderAnswerArea(gameArea);
         renderBtnArea(gameArea);
+        startBtn.style.display = 'none';
     }catch(e){
         alert('OOPS! Something Wrong with Rendering!!');
     }
 }
 
-startBtn.addEventListener('click', () => renderAll());
+startBtn.addEventListener('click', () => {
+    renderAll();
+});
 
 //mousemove is not working on mobile. Should use touchmove
 //CSS clip reference:
