@@ -18,29 +18,27 @@ function isEmptyObject(value) {
     return Object.keys(value).length === 0 && value.constructor === Object;
 }
 
-//Timer
+//Timer START
 let [milliseconds,seconds, totalDuration] = [0,0,0];
+let timerRef = document.querySelector('.timer span');
 let int = null;
-
-function displayTimer(el){
+function displayTimer(){
+    timerRef.innerText = '';
+    
     milliseconds+=1;
     if(milliseconds == 10){
         milliseconds = 0;
         seconds++;
     }
-
-    el.innerText = `${seconds}.${milliseconds}`;
+    let displayDuration = `${seconds}.${milliseconds}`;
+    timerRef.innerText = displayDuration;
 }
 
-function startTimer(el){
-    [milliseconds,seconds] = [0,0];
-    int = setInterval(displayTimer(el), 100);
-}
-
-function clearTimer(){
+function stopTimer(){
     clearInterval(int);
 }
 
-function addTotalDuration(el){
-    totalDuration += Number(el.innerText);
+function sumTotalDuration(){
+    totalDuration += Number(timerRef.innerText);
 }
+//Timer END

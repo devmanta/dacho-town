@@ -33,10 +33,12 @@ async function renderGamePhotoArea(gameArea){
     blackCover.className = 'black-cover';
 
     let targetImg = document.createElement('img');
-    targetImg.src = imgDir + questions.pop();
+    const lastValueOfQuestions = questions.pop();
+    targetImg.src = imgDir + lastValueOfQuestions;
     targetImg.id = 'questionPhoto';
     
     if(!targetImg.width){
+        questions.push(lastValueOfQuestions);
         alert('OOPS! Something Wrong with getting Image');
         throw new Error("Whoops!");
     }else{
@@ -44,6 +46,8 @@ async function renderGamePhotoArea(gameArea){
         blackCover.style.height = `${targetImg.height}px`;
         blackCover.addEventListener('mousemove', function(e) { moveLineToTarget(targetImg, e); });
         blackCover.addEventListener('touchmove', function(e) { moveLineToTargetMobile(targetImg, e); });
+
+        gameArea.innerHTML = '';
         gameArea.appendChild(blackCover).appendChild(targetImg);
     }
 }
@@ -67,6 +71,7 @@ function renderAnswerChoiceArea(gameArea){
     const answerArea = document.createElement('div');
     answerArea.className = 'answer-area';
     answerArea.style.left = `${img.width / 2}px`;
+
     for(key in answerChoice) {
         let answerBox = document.createElement('div');
         answerBox.className = 'answer-box';
@@ -79,15 +84,29 @@ function renderAnswerChoiceArea(gameArea){
         answerBox.addEventListener('click', function(){
             const result = checkAnswer(img, this.id);
             if(result){
-                alert('정답!');
+                stopTimer();
+                sumTotalDuration();
+                transparentBlackCover();
+                alert('정답! ' + totalDuration);
+                if(questions.length === 0){
+                    alert('끝! 총 소요시간: ' + totalDuration);
+                }else{
+                    renderBtnArea(gameArea);
+                }
             }else{
                 alert('땡!');
             }
         });
+
         answerArea.appendChild(answerBox);
     }
 
     gameArea.appendChild(answerArea);
+}
+
+function transparentBlackCover(){
+    const img = document.querySelector('#questionPhoto');
+    img.style.position = 'relative';
 }
 
 function renderBtnArea(gameArea){
@@ -96,9 +115,22 @@ function renderBtnArea(gameArea){
     const nextBtn = document.createElement('button');
     nextBtn.innerText = '다음';
     nextBtn.className = 'btn next';
-    btnArea.appendChild(nextBtn);
+    nextBtn.addEventListener('click', ()=> {
+        renderNextQuestion();
+    });
 
+    btnArea.appendChild(nextBtn);
     gameArea.appendChild(btnArea);
+}
+
+async function renderNextQuestion(){
+    try{
+        await renderGamePhotoArea(gameArea);
+        renderAnswerChoiceArea(gameArea);
+        startTimer();
+    }catch(e){
+        alert('OOPS! Something Wrong with Rendering!!');
+    }
 }
 
 function insertQuestions(data){
@@ -129,28 +161,34 @@ function moveLineToTargetMobile(img, e){
     img.style.clip = `rect(${y-30}px, ${x-10}px, ${y-10}px, ${x-30}px)`;
 }
 
+function startTimer(){
+    int = setInterval(displayTimer,100);
+}
+
 async function renderAll() {
     try{
         await renderQuestionArea(gameArea);
         await renderAnswerArea(gameArea);
-        renderBtnArea(gameArea);
+        startTimer();
         startBtn.style.display = 'none';
     }catch(e){
         alert('OOPS! Something Wrong with Rendering!!');
     }
 }
 
-startBtn.addEventListener('click', () => renderAll());
+startBtn.addEventListener('click', () => {
+    renderAll();
+});
 
 function checkAnswer(img, key){
     let photoName = img.src.split('/').pop();
     photoName = photoName.substring(0, photoName.lastIndexOf('.'));
-    console.log('photoName>>>> ' + photoName);
     if(key == answers[photoName]){
         return true;
     }
     return false;
 }
+
 
 //mousemove is not working on mobile. Should use touchmove
 //CSS clip reference:

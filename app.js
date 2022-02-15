@@ -6,13 +6,10 @@ const app = express();
 app.use(express.json());
 app.use(express.static('public'));
 
-console.log(__dirname);
-
 const guessPhotoRouter = require('./router/games/guessPhotoRouter.js');
 app.use('/games/guess-photo', guessPhotoRouter);
 
 app.get('/', function(req, res){
-    console.log(__dirname);
     res.writeHead(200, {
         'Content-Type': 'text/html'
     });
