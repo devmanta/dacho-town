@@ -1,4 +1,5 @@
-const domain = 'http://192.168.10.70:3000';
+// const domain = 'http://192.168.10.70:3000';
+const domain = 'http://localhost:3000';
 // const MyPromise = require('some-promise-lib');
 // const confetti = require('canvas-confetti');
 // confetti.Promise = MyPromise;
@@ -27,7 +28,7 @@ let timerRef = document.querySelector('.timer span');
 let int = null;
 function clearDisplayTimer(){
     [milliseconds,seconds] = [0,0];
-    timerRef.innerText = '0';
+    timerRef.innerText = '0.0';
 }
 
 function displayTimer(){
@@ -55,9 +56,8 @@ function delay(time) {
 
 //Confetti Reference:
 // https://www.kirilv.com/canvas-confetti/
-var duration = 15 * 1000;
-var animationEnd = Date.now() + duration;
-var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+// https://www.npmjs.com/package/canvas-confetti
+const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
 let fireWorkInitInterval = null;
 let fireWorkInterval = null;
 

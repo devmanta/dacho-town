@@ -2,21 +2,25 @@ h3{
     background-color: green;
 }
 
+.game-area{
+    width: 100%;
+    text-align: center;
+}
+
 .black-cover{
     background-color: black;
-    top: 10px;
-    left: 10px;
+    display: inline-block;
 }
 
 img{
+    /*질문 이미지*/
     position: absolute;
     filter: brightness(0);
+    display: block;
 }
 
 .answer-area{
-    position: relative;
     display: inline-block;
-    transform: translate(-50%, 0);
 }
 
 .answer-box{
