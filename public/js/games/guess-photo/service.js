@@ -93,11 +93,11 @@ function renderAnswerChoiceArea(gameArea){
                 stopTimer();
                 sumTotalDuration();
                 transparentBlackCover();
-                startFireWork(150);
+                interval = startFireWork(150);
                 if(questions.length === 0){
                     alert('끝! 총 소요시간: ' + totalDuration);
                 }else{
-                    renderBtnArea(gameArea);
+                    renderNextBtnArea(gameArea);
                 }
             }else{
                 this.classList.add('shake');
@@ -119,7 +119,7 @@ function transparentBlackCover(){
     img.style.position = 'relative';
 }
 
-function renderBtnArea(gameArea){
+function renderNextBtnArea(gameArea){
     const btnArea = document.createElement('div');
     btnArea.className = 'btn-area';
     const nextBtn = document.createElement('button');

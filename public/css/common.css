@@ -6,7 +6,7 @@
 }
 
 .shake{
-    animation: shake 0.4s;
+    animation: shake 0.2s;
     animation-iteration-count: infinite;
 }
 
