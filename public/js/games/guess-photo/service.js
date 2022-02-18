@@ -93,7 +93,7 @@ function renderAnswerChoiceArea(gameArea){
                 stopTimer();
                 sumTotalDuration();
                 transparentBlackCover();
-                interval = startFireWork(150);
+                fireWorkInitInterval = startFireWork(150);
                 if(questions.length === 0){
                     alert('끝! 총 소요시간: ' + totalDuration);
                 }else{
@@ -126,6 +126,7 @@ function renderNextBtnArea(gameArea){
     nextBtn.innerText = '다음';
     nextBtn.className = 'btn next';
     nextBtn.addEventListener('click', ()=> {
+        stopFireWork();
         renderNextQuestion();
     });
 

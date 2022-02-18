@@ -1,4 +1,4 @@
-const domain = 'http://localhost:3000';
+const domain = 'http://192.168.10.70:3000';
 // const MyPromise = require('some-promise-lib');
 // const confetti = require('canvas-confetti');
 // confetti.Promise = MyPromise;
@@ -56,6 +56,7 @@ var duration = 15 * 1000;
 var animationEnd = Date.now() + duration;
 var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
 let interval = null;
+let fireWorkInterval = null;
 
 function randomInRange(min, max) {
   return Math.random() * (max - min) + min;
@@ -75,5 +76,9 @@ function fireWork() {
 }
 
 function startFireWork(milliseconds){
-    setInterval(fireWork, milliseconds);
+    fireWorkInterval = setInterval(fireWork, milliseconds);
+}
+
+function stopFireWork(){
+    clearInterval(fireWorkInterval);
 }
