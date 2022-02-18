@@ -91,9 +91,10 @@ function renderAnswerChoiceArea(gameArea){
             const result = checkAnswer(img, this.id);
             if(result){
                 stopTimer();
-                sumTotalDuration();
                 transparentBlackCover();
                 fireWorkInitInterval = startFireWork(150);
+                sumTotalDuration();
+                clearDisplayTimer();
                 if(questions.length === 0){
                     alert('끝! 총 소요시간: ' + totalDuration);
                 }else{
@@ -135,7 +136,6 @@ function renderNextBtnArea(gameArea){
 }
 
 async function renderNextQuestion(){
-    console.log('next question START');
     await renderGamePhotoArea(gameArea);
     renderAnswerChoiceArea(gameArea);
     startTimer();
