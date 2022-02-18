@@ -93,7 +93,7 @@ function renderAnswerChoiceArea(gameArea){
                 stopTimer();
                 sumTotalDuration();
                 transparentBlackCover();
-                confetti.start();
+                startFireWork(150);
                 if(questions.length === 0){
                     alert('끝! 총 소요시간: ' + totalDuration);
                 }else{
