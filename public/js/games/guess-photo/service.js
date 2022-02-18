@@ -29,29 +29,36 @@ async function renderQuestionArea(gameArea) {
 }
 
 async function renderGamePhotoArea(gameArea){
+    const lastValueOfQuestions = questions.pop();
+    const url = imgDir + lastValueOfQuestions;
+    const targetImg = await loadImg(url);
+
     let blackCover = document.createElement('div');
     blackCover.className = 'black-cover';
+    blackCover.style.width = `${targetImg.width}px`;
+    blackCover.style.height = `${targetImg.height}px`;
+    blackCover.addEventListener('mousemove', function(e) { moveLineToTarget(targetImg, e); });
+    blackCover.addEventListener('touchmove', function(e) { moveLineToTargetMobile(targetImg, e); });
 
-    let targetImg = document.createElement('img');
-    const lastValueOfQuestions = questions.pop();
-    targetImg.src = imgDir + lastValueOfQuestions;
-    targetImg.id = 'questionPhoto';
-    
-    if(!targetImg.width){
-        questions.push(lastValueOfQuestions);
-        alert('OOPS! Something Wrong with getting Image');
-        throw new Error("Whoops!");
-    }else{
-        blackCover.style.width = `${targetImg.width}px`;
-        blackCover.style.height = `${targetImg.height}px`;
-        blackCover.addEventListener('mousemove', function(e) { moveLineToTarget(targetImg, e); });
-        blackCover.addEventListener('touchmove', function(e) { moveLineToTargetMobile(targetImg, e); });
-
-        gameArea.innerHTML = '';
-        gameArea.appendChild(blackCover).appendChild(targetImg);
-    }
+    gameArea.innerHTML = '';
+    gameArea.appendChild(blackCover).appendChild(targetImg);
 }
 
+const loadImg = function loadImg(url) {
+    const promise = new Promise(
+        function resolver(resolve, reject){
+            let img = new Image();
+            img.src = url;
+            img.onload = function(){
+                resolve(img);
+            };
+            img.onerror = function(e){
+                reject(e);
+            }
+        }
+    );
+    return promise;
+};
 async function renderAnswerArea(gameArea) {
     if(isEmptyObject(answerChoice)){
         const response = await fetch(domain + guessPhotoContextPath + '/answer-choice-list');
@@ -67,7 +74,8 @@ async function renderAnswerArea(gameArea) {
 }
 
 function renderAnswerChoiceArea(gameArea){
-    const img = document.getElementById('questionPhoto');
+    console.log('renderAnswerChoiceArea');
+    const img = document.querySelector('.black-cover img');
     const answerArea = document.createElement('div');
     answerArea.className = 'answer-area';
     answerArea.style.left = `${img.width / 2}px`;
@@ -105,7 +113,7 @@ function renderAnswerChoiceArea(gameArea){
 }
 
 function transparentBlackCover(){
-    const img = document.querySelector('#questionPhoto');
+    const img = document.querySelector('.black-cover img');
     img.style.position = 'relative';
 }
 
@@ -124,13 +132,10 @@ function renderBtnArea(gameArea){
 }
 
 async function renderNextQuestion(){
-    try{
-        await renderGamePhotoArea(gameArea);
-        renderAnswerChoiceArea(gameArea);
-        startTimer();
-    }catch(e){
-        alert('OOPS! Something Wrong with Rendering!!');
-    }
+    console.log('next question START');
+    await renderGamePhotoArea(gameArea);
+    renderAnswerChoiceArea(gameArea);
+    startTimer();
 }
 
 function insertQuestions(data){
