@@ -8,8 +8,16 @@ const gameArea = document.querySelector('.game-area');
 const startBtn = document.querySelector('.btn.start');
 
 window.addEventListener('DOMContentLoaded', ()=>{
-    
+    setInterval(()=>{
+        let startBtn = document.querySelector('.btn.start');
+        startBtn.style.color = getRandomColor();
+    }, 150);
 });
+
+function changeStartBtnTextColor(startBtn){
+    console.log('hello');
+    startBtn.style.color = getRandomColor();
+}
 
 async function renderQuestionArea(gameArea) {
     if(isEmptyObject(questions)){
@@ -77,7 +85,7 @@ function renderAnswerChoiceArea(gameArea){
     const img = document.querySelector('.black-cover img');
     const answerArea = document.createElement('div');
     answerArea.className = 'answer-area';
-    answerArea.style.left = `${img.width / 2}px`;
+    // answerArea.style.left = `${img.width / 2}px`;
 
     for(key in answerChoice) {
         let answerBox = document.createElement('div');
@@ -89,7 +97,7 @@ function renderAnswerChoiceArea(gameArea){
         answerBox.id = key;
         answerBox.addEventListener('click', async function(){
             const result = checkAnswer(img, this.id);
-            if(result){
+            if(result){ //정답
                 stopTimer();
                 transparentBlackCover();
                 fireWorkInitInterval = startFireWork(150);
@@ -100,6 +108,7 @@ function renderAnswerChoiceArea(gameArea){
                 }else{
                     renderNextBtnArea(gameArea);
                 }
+                answerBox.childe
             }else{
                 this.classList.add('shake');
                 await delay(500);
@@ -112,7 +121,7 @@ function renderAnswerChoiceArea(gameArea){
         answerArea.appendChild(answerBox);
     }
 
-    gameArea.appendChild(answerArea);
+    gameArea.appendChild(document.createElement('div')).appendChild(answerArea);
 }
 
 function transparentBlackCover(){

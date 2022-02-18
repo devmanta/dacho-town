@@ -79,3 +79,7 @@ function startFireWork(milliseconds){
 function stopFireWork(){
     clearInterval(fireWorkInterval);
 }
+
+function getRandomColor(){
+    return `hsla(${Math.random() * 360}, 100%, 50%, 1)`;
+  }

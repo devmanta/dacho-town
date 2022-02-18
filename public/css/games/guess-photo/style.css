@@ -34,3 +34,10 @@ img{
 .answer-box:hover{
     box-shadow: 0px 2px 10px 2px grey;
 }
+
+.start{
+    border-radius: 13px;
+    width: 100%;
+    font-size: 50px;
+    padding: 9px;
+}
