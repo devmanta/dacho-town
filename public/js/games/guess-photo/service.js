@@ -74,7 +74,6 @@ async function renderAnswerArea(gameArea) {
 }
 
 function renderAnswerChoiceArea(gameArea){
-    console.log('renderAnswerChoiceArea');
     const img = document.querySelector('.black-cover img');
     const answerArea = document.createElement('div');
     answerArea.className = 'answer-area';
@@ -88,21 +87,24 @@ function renderAnswerChoiceArea(gameArea){
         const randomIdx = getRandomIntInclusive(0, value.length-1);
         answerBox.innerText = value[randomIdx];
         answerBox.id = key;
-
-        answerBox.addEventListener('click', function(){
+        answerBox.addEventListener('click', async function(){
             const result = checkAnswer(img, this.id);
             if(result){
                 stopTimer();
                 sumTotalDuration();
                 transparentBlackCover();
-                alert('정답! ' + totalDuration);
+                confetti.start();
                 if(questions.length === 0){
                     alert('끝! 총 소요시간: ' + totalDuration);
                 }else{
                     renderBtnArea(gameArea);
                 }
             }else{
-                alert('땡!');
+                this.classList.add('shake');
+                await delay(500);
+                this.classList.remove('shake');
+                this.classList.add('transition');
+                this.classList.add('hidden');
             }
         });
 
