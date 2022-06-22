@@ -37,6 +37,7 @@ async function renderQuestionArea(gameArea) {
 }
 
 async function renderGamePhotoArea(gameArea){
+    console.log(questions);
     const lastValueOfQuestions = questions.pop();
     const url = imgDir + lastValueOfQuestions;
     const targetImg = await loadImg(url);
